@@ -43,13 +43,13 @@
 	</repositories>
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>se.vti.matsim-projects</groupId>
-			<artifactId>utils</artifactId>
+			<artifactId>od2roundtrips</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
+		
 	</dependencies>
 
 	<build>
