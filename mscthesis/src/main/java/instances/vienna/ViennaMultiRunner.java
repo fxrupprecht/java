@@ -31,21 +31,21 @@ import se.vti.roundtrips.multiple.MultiRoundTripProposal;
 import se.vti.roundtrips.preferences.AllDayTimeConstraintPreference;
 import se.vti.roundtrips.preferences.Preferences;
 import se.vti.roundtrips.preferences.StrategyRealizationConsistency;
-import se.vti.roundtrips.preferences.UniformOverLocationCount;
-import se.vti.roundtrips.single.PossibleTransitions;
+import se.vti.roundtrips.preferences.UniformOverLocationCountWithoutLocationConstraints;
+import se.vti.roundtrips.single.PossibleTransitionsWithoutLocationConstraints;
 import se.vti.roundtrips.single.RoundTrip;
 import se.vti.roundtrips.single.RoundTripDepartureProposal;
 import se.vti.roundtrips.single.RoundTripLocationProposal;
 import se.vti.roundtrips.single.RoundTripProposal;
 import se.vti.utils.misc.metropolishastings.MHAlgorithm;
 
-public class ViennaMultiRunner_rup02 {
+public class ViennaMultiRunner {
 
 	public static void main(String[] args) throws IOException {
 
 		// Spezifiziere den Dateinamen
 
-		String outputFileName = "districts_multi_output.txt";
+		String outputFileName = "output/districts_multi_output.txt";
 
 		// Erstelle einen FileOutputStream für die Datei
 
@@ -93,7 +93,7 @@ public class ViennaMultiRunner_rup02 {
 
 		// Consistency preferences
 
-		allPreferences.addComponent(new SingleToMultiComponent(new UniformOverLocationCount<>(scenario)));
+		allPreferences.addComponent(new SingleToMultiComponent(new UniformOverLocationCountWithoutLocationConstraints<>(scenario)));
 
 		allPreferences.addComponent(new SingleToMultiComponent(new AllDayTimeConstraintPreference<>()));
 
@@ -162,8 +162,8 @@ public class ViennaMultiRunner_rup02 {
 
 		Map<String, Map<TAZ, Double>> group2work2target = new LinkedHashMap<>();
 		// Replace table, this currently uses home locations as main activity locations.
-		for (Map.Entry<Tuple<String, String>, Double> entry : MatrixDataReader
-				.read("./input/districts_work_locations.csv").entrySet()) {
+		for (Map.Entry<Tuple<String, String>, Double> entry : MatrixDataReader.read("./input/workLocations.csv")
+				.entrySet()) {
 			String group = entry.getKey().getA();
 			Map<TAZ, Double> work2target = group2work2target.computeIfAbsent(group, g -> new LinkedHashMap<>());
 			TAZ work = scenario.getLocation(entry.getKey().getB());
@@ -198,9 +198,10 @@ public class ViennaMultiRunner_rup02 {
 
 		RoundTripProposal<RoundTrip<TAZ>> proposal = new RoundTripProposal<>(simulator, scenario.getRandom());
 
-		proposal.addProposal(new RoundTripLocationProposal<RoundTrip<TAZ>, TAZ>(scenario,
-
-				(state, scen) -> new PossibleTransitions<TAZ>(state, scen)), locationProposalWeight);
+		proposal.addProposal(
+				new RoundTripLocationProposal<RoundTrip<TAZ>, TAZ>(scenario,
+						(state, scen) -> new PossibleTransitionsWithoutLocationConstraints<TAZ>(state, scen)),
+				locationProposalWeight);
 
 		proposal.addProposal(new RoundTripDepartureProposal<>(scenario), departureProposalWeight);
 
