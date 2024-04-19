@@ -3,12 +3,12 @@
 
   <parent>
     <groupId>franzjava</groupId>
-  	<artifactId>mscthesis</artifactId>
+  	<artifactId>franzjava</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>roundtrips</artifactId>
+  <artifactId>mscthesis</artifactId>
   
 	<repositories>
 	  <!--Note that in general repositories are not transitive, so they need to be repeated at every level where needed.-->
